@@ -39,23 +39,22 @@ if st.session_state.api_key and st.session_state.api_endpoint:
         st.session_state.lesson_plan = generate_lesson_plan(st.session_state.subtopics, st.session_state.api_key, st.session_state.api_endpoint)
         
         # Save lesson plan to JSON file
-        with open('lesson_plan.json', 'w') as f:
-            json.dump(st.session_state.lesson_plan, f, indent=4)
+        # with open('lesson_plan.json', 'w') as f:
+        #     json.dump(st.session_state.lesson_plan, f, indent=4)
         
-        st.write("Lesson Plan Generated and Saved to 'lesson_plan.json'")
-        st.write(st.session_state.lesson_plan)
+        # st.write("Lesson Plan Generated and Saved to 'lesson_plan.json'")
+        # st.write(st.session_state.lesson_plan)
 
         # Reset the chatbot to use the new lesson plan
         if 'chatbot' in st.session_state:
             del st.session_state.chatbot
 
     # Check if lesson plan exists
-    lesson_plan_exists = os.path.isfile('lesson_plan.json')
+    # lesson_plan_exists = os.path.isfile('lesson_plan.json')
 
-    if lesson_plan_exists:
+    if st.session_state.lesson_plan:
         # Load the lesson plan JSON
-        with open('lesson_plan.json', 'r') as f:
-            plan_json = json.load(f)
+        plan_json=st.session_state.lesson_plan
 
         if "chat" not in st.session_state:
             st.session_state.chat = initialize_chat_openai(st.session_state.api_key, st.session_state.api_endpoint)
