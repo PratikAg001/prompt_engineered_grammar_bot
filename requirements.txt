@@ -1,0 +1,4 @@
+langchain-openai==0.1.15
+langchain==0.2.7
+langchain-community==0.2.7
+streamlit==1.36.0
