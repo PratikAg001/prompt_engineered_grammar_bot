@@ -22,7 +22,7 @@ if st.session_state.api_key and not st.session_state.api_endpoint:
 
 if st.session_state.api_key and st.session_state.api_endpoint:
     # Dropdown for main topic
-    topic = st.selectbox("Choose the main topic", ["Noun", "Adjective","Preposition","Tense","Composition"])
+    topic = st.selectbox("Choose the main topic", ["Noun", "Adjective", "Preposition", "Tense", "Composition"])
 
     # Generate subtopics and lesson plan only if they are not already generated
     if 'subtopics' not in st.session_state:
@@ -45,6 +45,10 @@ if st.session_state.api_key and st.session_state.api_endpoint:
         st.write("Lesson Plan Generated and Saved to 'lesson_plan.json'")
         st.write(st.session_state.lesson_plan)
 
+        # Reset the chatbot to use the new lesson plan
+        if 'chatbot' in st.session_state:
+            del st.session_state.chatbot
+
     # Check if lesson plan exists
     lesson_plan_exists = os.path.isfile('lesson_plan.json')
 
@@ -55,7 +59,7 @@ if st.session_state.api_key and st.session_state.api_endpoint:
 
         if "chat" not in st.session_state:
             st.session_state.chat = initialize_chat_openai(st.session_state.api_key, st.session_state.api_endpoint)
-            st.experimental_rerun()
+            st.rerun()
 
         if "chat" in st.session_state and "chatbot" not in st.session_state:
             st.session_state.chatbot = LessonChatbot(plan_json, st.session_state.chat)
@@ -96,7 +100,7 @@ if st.session_state.api_key and st.session_state.api_endpoint:
                 chatbot.current_topic_index = st.session_state.current_topic_index
                 chatbot.current_question_index = st.session_state.current_question_index
                 st.session_state.explanation = chatbot.explain_topic()
-                st.experimental_rerun()
+                st.rerun()
 
             # Display explanation
             st.write(f"**Topic: {chatbot.get_current_topic()['topic']}**")
@@ -123,7 +127,7 @@ if st.session_state.api_key and st.session_state.api_endpoint:
                         st.session_state.incorrect_attempts += 1
                         if st.session_state.incorrect_attempts >= 2:
                             st.write("Incorrect twice. Moving to the next question.")
-                            hint = chatbot.give_hint_or_respond(user_input,st.session_state.incorrect_attempts)
+                            hint = chatbot.give_hint_or_respond(user_input, st.session_state.incorrect_attempts)
                             st.session_state.hints.append(hint)
                             st.write("Hint or Response:", hint)
                             next_question()
